@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MotoPeças Pro - Peças e Acessórios Premium</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #0a0a0a; color: white; overflow-x: hidden; }
+    
+    .glass {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .text-gradient {
+      background: linear-gradient(135deg, #fb923c, #ea580c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .glow { box-shadow: 0 0 40px rgba(249,115,22,0.3); }
+    .glow-subtle { box-shadow: 0 0 20px rgba(249,115,22,0.15); }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+    
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slide-in-right {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .animate-spin-slow { animation: spin-slow 30s linear infinite; }
+    .animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
+    .animate-slide-in-right { animation: slide-in-right 0.5s ease-out forwards; }
+    .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
+    
+    .hover-lift {
+      transition: all 0.3s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(249,115,22,0.2);
+    }
+    
+    .hover-scale {
+      transition: transform 0.3s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f97316; }
+    
+    .cart-open { overflow: hidden; }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+        <a href="#inicio" class="flex items-center gap-2 group">
+          <div class="relative">
+            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-700 rounded-xl flex items-center justify-center animate-float">
+              <span class="text-white font-bold text-lg">M</span>
+            </div>
+            <div class="absolute inset-0 bg-orange-500 rounded-xl blur-xl opacity-50 animate-pulse-glow"></div>
+          </div>
+          <span class="text-xl font-bold text-white">Moto<span class="text-orange-500">Peças</span></span>
+        </a>
+        
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#inicio" class="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:-translate-y-0.5 duration-200">Início</a>
+          <a href="#categorias" class="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:-translate-y-0.5 duration-200">Categorias</a>
+          <a href="#produtos" class="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:-translate-y-0.5 duration-200">Produtos</a>
+          <a href="#sobre" class="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:-translate-y-0.5 duration-200">Sobre</a>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <button id="search-btn" class="p-2 text-gray-300 hover:text-white transition-colors hidden sm:block hover:rotate-12 duration-200">
+            <i data-lucide="search" class="w-5 h-5"></i>
+          </button>
+          <button id="user-btn" class="p-2 text-gray-300 hover:text-white transition-colors hidden sm:block">
+            <i data-lucide="user" class="w-5 h-5"></i>
+          </button>
+          <button id="cart-btn" class="relative p-2 text-gray-300 hover:text-white transition-colors group">
+            <i data-lucide="shopping-cart" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+            <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-orange-500 text-white text-xs font-bold rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+          </button>
+          <button id="menu-btn" class="p-2 text-gray-300 hover:text-white transition-colors md:hidden">
+            <i data-lucide="menu" class="w-6 h-6" id="menu-icon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden glass mt-3 border-t border-gray-800">
+      <div class="px-4 py-4 space-y-3">
+        <a href="#inicio" class="block py-2 text-gray-300 hover:text-orange-400 transition-colors">Início</a>
+        <a href="#categorias" class="block py-2 text-gray-300 hover:text-orange-400 transition-colors">Categorias</a>
+        <a href="#produtos" class="block py-2 text-gray-300 hover:text-orange-400 transition-colors">Produtos</a>
+        <a href="#sobre" class="block py-2 text-gray-300 hover:text-orange-400 transition-colors">Sobre</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="inicio" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <!-- Animated Background -->
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 via-gray-900 to-gray-900"></div>
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-orange-600/20 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="text-center lg:text-left animate-slide-up">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+            <span class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
+            <span class="text-sm text-gray-300">Nova coleção 2024 disponível</span>
+          </div>
+          
+          <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+            Potencialize sua <span class="text-gradient">moto</span><br>
+            com peças <span class="text-orange-500">premium</span>
+          </h1>
+          
+          <p class="text-lg text-gray-400 mb-8 max-w-xl mx-auto lg:mx-0">
+            Descubra as melhores peças e acessórios para sua motocicleta. 
+            Qualidade, performance e estilo em um só lugar.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <a href="#produtos" class="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-full overflow-hidden hover-lift">
+              <span class="relative z-10">Explorar Produtos</span>
+              <i data-lucide="chevron-right" class="relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+            <button class="inline-flex items-center justify-center gap-2 px-8 py-4 glass text-white font-semibold rounded-full hover:bg-white/10 transition-colors hover-lift">
+              <i data-lucide="play" class="w-5 h-5 text-orange-500"></i>
+              Ver Vídeo
+            </button>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-8 mt-12 pt-8 border-t border-white/10">
+            <div>
+              <div class="text-3xl font-bold text-white mb-1">50K+</div>
+              <div class="text-sm text-gray-500">Clientes Satisfeitos</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white mb-1">10K+</div>
+              <div class="text-sm text-gray-500">Peças Disponíveis</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white mb-1">99%</div>
+              <div class="text-sm text-gray-500">Avaliação Positiva</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Hero Visual -->
+        <div class="hidden lg:flex items-center justify-center animate-float">
+          <div class="relative w-[500px] h-[500px]">
+            <div class="absolute inset-0 rounded-full border-2 border-dashed border-orange-500/30 animate-spin-slow"></div>
+            <div class="absolute inset-4 rounded-full border border-orange-500/20"></div>
+            
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-64 h-64 rounded-full bg-gradient-to-br from-orange-500/20 to-orange-700/20 backdrop-blur-xl border border-orange-500/30 flex items-center justify-center animate-pulse-glow">
+                <div class="text-center">
+                  <div class="text-6xl font-bold text-gradient mb-2">M</div>
+                  <p class="text-gray-400 text-sm">MotoPeças Pro</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 to-transparent"></div>
+  </section>
+
+  <!-- Categories Section -->
+  <section id="categorias" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 animate-slide-up">
+        <span class="inline-block px-4 py-1 rounded-full bg-orange-500/10 text-orange-400 text-sm font-medium mb-4">Navegue por Categoria</span>
+        <h2 class="text-4xl sm:text-5xl font-bold mb-4">Encontre o que você <span class="text-gradient">precisa</span></h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Explore nossas categorias especializadas e descubra as melhores peças para sua moto</p>
+      </div>
+      
+      <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- Categories injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section id="produtos" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 animate-slide-up">
+        <span class="inline-block px-4 py-1 rounded-full bg-orange-500/10 text-orange-400 text-sm font-medium mb-4">Produtos em Destaque</span>
+        <h2 class="text-4xl sm:text-5xl font-bold mb-4">As Melhores <span class="text-gradient">Ofertas</span></h2>
+      </div>
+      
+      <!-- Filter Buttons -->
+      <div class="flex flex-wrap justify-center gap-2 mb-12" id="filter-buttons">
+        <button data-filter="Todos" class="px-5 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25">Todos</button>
+        <button data-filter="Motor" class="px-5 py-2 rounded-full text-sm font-medium glass text-gray-400 hover:text-white hover:bg-white/10 transition-all">Motor</button>
+        <button data-filter="Freios" class="px-5 py-2 rounded-full text-sm font-medium glass text-gray-400 hover:text-white hover:bg-white/10 transition-all">Freios</button>
+        <button data-filter="Elétrica" class="px-5 py-2 rounded-full text-sm font-medium glass text-gray-400 hover:text-white hover:bg-white/10 transition-all">Elétrica</button>
+        <button data-filter="Escape" class="px-5 py-2 rounded-full text-sm font-medium glass text-gray-400 hover:text-white hover:bg-white/10 transition-all">Escape</button>
+        <button data-filter="Suspensão" class="px-5 py-2 rounded-full text-sm font-medium glass text-gray-400 hover:text-white hover:bg-white/10 transition-all">Suspensão</button>
+        <button data-filter="Painel" class="px-5 py-2 rounded-full text-sm font-medium glass text-gray-400 hover:text-white hover:bg-white/10 transition-all">Painel</button>
+      </div>
+      
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Products injected by JS -->
+      </div>
+      
+      <div class="mt-12 text-center">
+        <button class="px-8 py-4 bg-gray-800 border border-gray-700 rounded-full text-white font-semibold hover:border-orange-500/50 hover:bg-gray-700 transition-all hover-lift">
+          Ver Todos os Produtos
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="sobre" class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-20 left-10 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl animate-pulse-glow"></div>
+      <div class="absolute bottom-20 right-10 w-96 h-96 bg-orange-600/5 rounded-full blur-3xl animate-pulse-glow" style="animation-delay: 1s;"></div>
+    </div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 animate-slide-up">
+        <span class="inline-block px-4 py-1 rounded-full bg-orange-500/10 text-orange-400 text-sm font-medium mb-4">Por que escolher a MotoPeças?</span>
+        <h2 class="text-4xl sm:text-5xl font-bold mb-4">Vantagens <span class="text-gradient">Exclusivas</span></h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Oferecemos o melhor serviço do mercado para garantir sua satisfação</p>
+      </div>
+      
+      <div id="features-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Features injected by JS -->
+      </div>
+      
+      <div class="mt-20 p-8 rounded-3xl bg-gradient-to-r from-orange-900/50 to-gray-800 border border-orange-500/20">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div>
+            <div class="text-4xl sm:text-5xl font-bold text-gradient mb-2">15+</div>
+            <div class="text-sm text-gray-400">Anos no Mercado</div>
+          </div>
+          <div>
+            <div class="text-4xl sm:text-5xl font-bold text-gradient mb-2">500K+</div>
+            <div class="text-sm text-gray-400">Pedidos Entregues</div>
+          </div>
+          <div>
+            <div class="text-4xl sm:text-5xl font-bold text-gradient mb-2">98%</div>
+            <div class="text-sm text-gray-400">Clientes Satisfeitos</div>
+          </div>
+          <div>
+            <div class="text-4xl sm:text-5xl font-bold text-gradient mb-2">24h</div>
+            <div class="text-sm text-gray-400">Suporte Disponível</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative bg-gray-900 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        <div class="col-span-2 lg:col-span-2">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-700 rounded-xl flex items-center justify-center">
+              <span class="text-white font-bold text-lg">M</span>
+            </div>
+            <span class="text-xl font-bold text-white">Moto<span class="text-orange-500">Peças</span></span>
+          </div>
+          <p class="text-gray-400 text-sm mb-6 max-w-sm">Especialistas em peças e acessórios para motocicletas. Qualidade, confiança e performance desde 2009.</p>
+          <div class="space-y-3">
+            <a href="tel:0800-123-4567" class="flex items-center gap-3 text-gray-400 hover:text-orange-400 transition-colors text-sm">
+              <i data-lucide="phone" class="w-4 h-4 text-orange-500"></i>
+              0800-123-4567
+            </a>
+            <a href="mailto:contato@motopecas.com" class="flex items-center gap-3 text-gray-400 hover:text-orange-400 transition-colors text-sm">
+              <i data-lucide="mail" class="w-4 h-4 text-orange-500"></i>
+              contato@motopecas.com
+            </a>
+            <p class="flex items-center gap-3 text-gray-400 text-sm">
+              <i data-lucide="map-pin" class="w-4 h-4 text-orange-500"></i>
+              São Paulo, SP - Brasil
+            </p>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold text-white mb-4">Produtos</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Motor</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Freios</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Suspensão</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Elétrica</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Acessórios</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold text-white mb-4">Suporte</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Central de Ajuda</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Rastrear Pedido</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Trocas e Devoluções</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Garantia</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold text-white mb-4">Empresa</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Sobre Nós</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Blog</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Carreiras</a></li>
+            <li><a href="#" class="text-sm text-gray-400 hover:text-orange-400 transition-colors">Contato</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="border-t border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-gray-500">© 2024 MotoPeças Pro. Todos os direitos reservados.</p>
+          <div class="flex items-center gap-3">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all hover:-translate-y-1"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-pink-600 hover:text-white transition-all hover:-translate-y-1"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-sky-500 hover:text-white transition-all hover:-translate-y-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-all hover:-translate-y-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart Sidebar -->
+  <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300"></div>
+  <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-full sm:w-[450px] bg-gray-800 border-l border-gray-700 z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="flex items-center justify-between p-6 border-b border-gray-700">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center">
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold text-white">Seu Carrinho</h2>
+          <p class="text-sm text-gray-500"><span id="cart-items-count">0</span> itens</p>
+        </div>
+      </div>
+      <button id="close-cart" class="p-2 rounded-full hover:bg-gray-700 transition-colors hover:rotate-90 duration-200">
+        <i data-lucide="x" class="w-5 h-5 text-gray-400"></i>
+      </button>
+    </div>
+    
+    <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+      <div id="empty-cart" class="flex flex-col items-center justify-center h-full text-center">
+        <div class="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center mb-4 animate-float">
+          <i data-lucide="shopping-bag" class="w-10 h-10 text-gray-500"></i>
+        </div>
+        <h3 class="text-lg font-medium text-white mb-2">Carrinho vazio</h3>
+        <p class="text-gray-500 text-sm max-w-xs">Adicione alguns produtos incríveis para começar!</p>
+        <button onclick="closeCart()" class="mt-6 px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">Continuar Comprando</button>
+      </div>
+    </div>
+    
+    <div id="cart-footer" class="border-t border-gray-700 p-6 space-y-4 hidden">
+      <div class="space-y-2">
+        <div class="flex justify-between text-sm text-gray-400">
+          <span>Subtotal</span>
+          <span id="cart-subtotal">R$ 0,00</span>
+        </div>
+        <div class="flex justify-between text-sm text-gray-400">
+          <span>Frete</span>
+          <span class="text-green-400">Grátis</span>
+        </div>
+        <div class="flex justify-between text-lg font-semibold text-white pt-2 border-t border-gray-700">
+          <span>Total</span>
+          <span id="cart-total" class="text-orange-400">R$ 0,00</span>
+        </div>
+      </div>
+      <button class="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-orange-500/25 transition-shadow">
+        Finalizar Compra
+        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 z-50 transform translate-y-20 opacity-0 transition-all duration-300">
+    <div class="flex items-center gap-3 px-6 py-4 bg-gray-800 border border-orange-500/30 rounded-xl shadow-2xl">
+      <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+        <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+      </div>
+      <span id="toast-message" class="text-white font-medium">Produto adicionado!</span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
