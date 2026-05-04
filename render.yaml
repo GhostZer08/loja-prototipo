@@ -1,9 +1,6 @@
 services:
   - type: static_site
     name: motopecas-shop
+    runtime: static
     buildCommand: npm install && npm run build
-    publishDir: dist
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    staticPublishPath: ./dist
