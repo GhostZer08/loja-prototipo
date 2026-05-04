@@ -1,0 +1,9 @@
+services:
+  - type: static_site
+    name: motopecas-shop
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
